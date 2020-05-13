@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
-JOB_TITLE = "data+scientist"
+JOB_TITLES = ["data+scientist", "python+developer", 'machine+learning', 'deep+learning', 'researcher']
 
 
 class GlassdoorSpider(scrapy.Spider):
     name = 'glassdoor'
     allowed_domains = ['glassdoor.com']
     start_urls = [f"https://www.glassdoor.com/Job/jobs.htm?suggestCount=0&suggestChosen=false&clickSource="
-                  f"searchBtn&typedKeyword={JOB_TITLE}&sc.keyword={JOB_TITLE}&locT=C&locId=2421090&jobType="
+                  f"searchBtn&typedKeyword={JOB_TITLE}&sc.keyword={JOB_TITLE}&locT=C&locId=2421090&jobType=" for
+                  JOB_TITLE in JOB_TITLES
                   ]
     overall_pages = None
     current_page = 1
@@ -19,7 +20,7 @@ class GlassdoorSpider(scrapy.Spider):
         self.overall_pages = int(overall_pages)
         jobs_count = response.css("#MainColSummary .jobsCount::text").get().replace("\xa0", " ")
         current_page_jobs = response.css(".jobContainer")
-        print(f"\n\nFound {jobs_count} {JOB_TITLE} on {overall_pages} pages\n\n")
+        print(f"\n\nFound {jobs_count} for current position on {overall_pages} pages\n\n")
 
         for job in current_page_jobs:
             easy_apply = True if len(job.css(".easyApply")) > 0 else False
