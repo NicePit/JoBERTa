@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
-JOB_TITLES = ["data+scientist"]
+JOB_TITLES = ["data+scientist", 'data+engineer', 'researcher', 'machine+learning+engineer', 'deep+learning',
+              'python+developer']
 
 
 class GlassdoorSpider(scrapy.Spider):
@@ -36,7 +37,7 @@ class GlassdoorSpider(scrapy.Spider):
     def parse_details(self, response):
         published = response.meta.get('published')
         title = response.css("div.css-17x2pwl.e11nt52q5").xpath("string()").extract_first()
-        job_description = ' '.join(response.css('.desc.css-58vpdc.ecgq1xb3').xpath("text()").extract())
+        job_description = ' '.join(response.css("#JobDescriptionContainer .desc").xpath("string()").extract())
         yield {"title": title,
                "published": published,
                "easy_apply": response.meta.get("easy_apply"),
