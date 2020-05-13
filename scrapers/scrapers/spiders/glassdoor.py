@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
-JOB_TITLES = ["data+scientist", "python+developer", 'machine+learning', 'deep+learning', 'researcher']
+JOB_TITLES = ["data+scientist"]
 
 
 class GlassdoorSpider(scrapy.Spider):
@@ -54,5 +54,5 @@ class GlassdoorSpider(scrapy.Spider):
             yield scrapy.Request(job_url, self.parse_details, meta={'published': published, "easy_apply": easy_apply})
         while self.current_page <= self.overall_pages:
             self.current_page += 1
-            page_url = self.start_urls[0] + f"p={self.current_page}"
+            page_url = self.start_urls[0] + f"&p={self.current_page}"
             yield scrapy.Request(page_url, self.parse_pagination)
