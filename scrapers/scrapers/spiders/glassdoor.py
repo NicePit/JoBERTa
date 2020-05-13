@@ -28,9 +28,9 @@ class GlassdoorSpider(scrapy.Spider):
             job_url = response.urljoin(job_relative_url)
             yield scrapy.Request(job_url, self.parse_details, meta={'published': published, "easy_apply": easy_apply})
 
-        # self.current_page += 1
-        # page_url = self.start_urls[0] + f"p={self.current_page}"
-        # yield scrapy.Request(page_url, self.parse_pagination)
+        self.current_page += 1
+        page_url = self.start_urls[0] + f"p={self.current_page}"
+        yield scrapy.Request(page_url, self.parse_pagination)
 
     def parse_details(self, response):
         published = response.meta.get('published')
