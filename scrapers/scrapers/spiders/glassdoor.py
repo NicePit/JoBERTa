@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.firefox.options import Options
 
 from ..items import ScrapersItem
@@ -66,10 +67,13 @@ class GlassdoorSpider(scrapy.Spider):
         items['company_name'] = company_name
 
         # This is very slow part because of selenium. Can be commented out for faster scraping
-        self.driver.get(response.url)
-        self.driver.find_element_by_css_selector(".css-1iqg1r5.e1eh6fgm0").click()
-        company_size = self.driver.find_elements_by_css_selector("#InfoFields .css-vugejy.es5l5kg0 span")[1].text
-        items['company_size'] = company_size
+        try:
+            self.driver.get(response.url)
+            self.driver.find_element_by_css_selector(".css-1iqg1r5.e1eh6fgm0").click()
+            company_size = self.driver.find_elements_by_css_selector("#InfoFields .css-vugejy.es5l5kg0 span")[1].text
+            items['company_size'] = company_size
+        except NoSuchElementException:
+            pass
 
         yield items
 
