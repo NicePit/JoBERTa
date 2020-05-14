@@ -10,5 +10,11 @@ import scrapy
 
 class ScrapersItem(scrapy.Item):
     # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    title = scrapy.Field()
+    published = scrapy.Field()
+    easy_apply = scrapy.Field()
+    url = scrapy.Field()
+    description = scrapy.Field()
+    rating = scrapy.Field()
+    company_name = scrapy.Field()
+    company_size = scrapy.Field()

@@ -1,2 +1,3 @@
-scrapers/scrapers/data.json
+**/data.json
+**/geckodriver.log
 static_files
