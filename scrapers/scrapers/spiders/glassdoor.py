@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 
 from ..items import ScrapersItem
 
 JOB_TITLES = ["data+scientist"]
+
+
 #
 # JOB_TITLES = ["data+scientist", 'data+engineer', 'researcher', 'machine+learning+engineer', 'deep+learning',
 #               'python+developer']
@@ -22,7 +25,9 @@ class GlassdoorSpider(scrapy.Spider):
 
     def __init__(self, name=None, **kwargs):
         super().__init__(name, **kwargs)
-        self.driver = webdriver.Firefox()
+        options = Options()
+        options.headless = True
+        self.driver = webdriver.Firefox(options=options)
 
     def parse(self, response):
 
@@ -47,7 +52,9 @@ class GlassdoorSpider(scrapy.Spider):
         items = ScrapersItem()
         published = response.meta.get('published')
         title = response.css("div.css-17x2pwl.e11nt52q5").xpath("string()").extract_first()
-        job_description = ' '.join(response.css("#JobDescriptionContainer .desc").xpath("string()").extract())
+        job_description_1 = ' '.join(response.css("#JobDescriptionContainer .desc").xpath("string()").extract())
+        job_description_2 = ' '.join(response.css("#JobDescriptionContainer .desc li").xpath("string()").extract())
+        job_description = job_description_1 + ' ' + job_description_2
         rating = response.css(".css-1pmc6te.e11nt52q3").xpath("text()").extract_first()
         company_name = response.css(".css-16nw49e.e11nt52q1").xpath("text()").extract_first()
         items['rating'] = rating
@@ -57,10 +64,13 @@ class GlassdoorSpider(scrapy.Spider):
         items['url'] = response.url,
         items['description'] = job_description
         items['company_name'] = company_name
+
+        # This is very slow part because of selenium. Can be commented out for faster scraping
         self.driver.get(response.url)
         self.driver.find_element_by_css_selector(".css-1iqg1r5.e1eh6fgm0").click()
         company_size = self.driver.find_elements_by_css_selector("#InfoFields .css-vugejy.es5l5kg0 span")[1].text
         items['company_size'] = company_size
+
         yield items
 
     def parse_pagination(self, response):
