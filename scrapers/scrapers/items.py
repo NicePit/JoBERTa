@@ -18,3 +18,4 @@ class ScrapersItem(scrapy.Item):
     rating = scrapy.Field()
     company_name = scrapy.Field()
     company_size = scrapy.Field()
+    location = scrapy.Field()
